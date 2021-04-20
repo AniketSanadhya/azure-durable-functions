@@ -9,23 +9,23 @@ namespace AzureDurableFunctions
     {
 
         [FunctionName(nameof(CleanData))]
-        public static string CleanData([ActivityTrigger] string data, ILogger log)
+        public static string CleanData([ActivityTrigger] string value, ILogger log)
         {
-            log.LogInformation($"CleanData {data}.");
+            log.LogInformation($"CleanData {value}.");
             return $"CleanData";
         }
 
         [FunctionName(nameof(ApplyRules))]
-        public static string ApplyRules([ActivityTrigger] string data, ILogger log)
+        public static string ApplyRules([ActivityTrigger] string value, ILogger log)
         {
-            log.LogInformation($"ApplyRules {data}.");
+            log.LogInformation($"ApplyRules {value}.");
             return $"ApplyRules";
         }
 
         [FunctionName(nameof(ExtractData))]
-        public static string ExtractData([ActivityTrigger]  string data, ILogger log)
+        public static string ExtractData([ActivityTrigger]  string value, ILogger log)
         {
-            log.LogInformation($"ExtractData {data}.");
+            log.LogInformation($"ExtractData {value}.");
             return $"ExtractData";
         }
 

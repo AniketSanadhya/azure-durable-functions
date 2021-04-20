@@ -9,21 +9,19 @@ namespace AzureDurableFunctions
 {
     public static class HttpTriggerFunctions
     {
-        public static class HttpTriggers
+
+        [FunctionName(nameof(ProcessFile))]
+        public static async Task<HttpResponseMessage> ProcessFile(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestMessage req,
+        [DurableClient] IDurableOrchestrationClient starter,
+        ILogger log)
         {
-            [FunctionName(nameof(ProcessFile))]
-            public static async Task<HttpResponseMessage> ProcessFile(
-            [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestMessage req,
-            [DurableClient] IDurableOrchestrationClient starter,
-            ILogger log)
-            {
-                // Function input comes from the request content.
-                string instanceId = await starter.StartNewAsync("Function1", null);
+            // Function input comes from the request content.
+            string instanceId = await starter.StartNewAsync("ProcessFileOrchestrator", null);
 
-                log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
+            log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
 
-                return starter.CreateCheckStatusResponse(req, instanceId);
-            }
+            return starter.CreateCheckStatusResponse(req, instanceId);
         }
 
     }
