@@ -1,5 +1,7 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Extensions.Http;
@@ -11,13 +13,14 @@ namespace AzureDurableFunctions
     {
 
         [FunctionName(nameof(ProcessFile))]
-        public static async Task<HttpResponseMessage> ProcessFile(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequestMessage req,
+        public static async Task<IActionResult> ProcessFile(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", "post")] HttpRequest req,
         [DurableClient] IDurableOrchestrationClient starter,
         ILogger log)
         {
             // Function input comes from the request content.
-            string instanceId = await starter.StartNewAsync("ProcessFileOrchestrator", null);
+            var temp = req.GetQueryParameterDictionary()["file"];
+            string instanceId = await starter.StartNewAsync("ProcessFileOrchestrator", null, temp);
 
             log.LogInformation($"Started orchestration with ID = '{instanceId}'.");
 

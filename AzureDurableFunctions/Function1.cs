@@ -2,6 +2,8 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.DurableTask;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
+using System;
+using System.IO;
 
 namespace AzureDurableFunctions
 {
@@ -11,6 +13,12 @@ namespace AzureDurableFunctions
         [FunctionName(nameof(CleanData))]
         public static string CleanData([ActivityTrigger] string value, ILogger log)
         {
+
+            if (value.Contains("error"))
+            {
+                throw new InvalidOperationException("Incorrect File");
+            }
+
             log.LogInformation($"CleanData {value}.");
             return $"CleanData";
         }
@@ -27,6 +35,13 @@ namespace AzureDurableFunctions
         {
             log.LogInformation($"ExtractData {value}.");
             return $"ExtractData";
+        }
+
+        [FunctionName(nameof(Cleanup))]
+        public static string Cleanup([ActivityTrigger] string value, ILogger log)
+        {
+            log.LogInformation($"Cleanup {value}.");
+            return $"Cleaned up successfully";
         }
 
     }
